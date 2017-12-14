@@ -48,18 +48,18 @@ jobs:
           name: Send to CodeCov
           command: bash <(curl -s https://codecov.io/bash)
           
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
-          when: always
-
-      - store_test_results:
-          path: ~/junit
-
-      - store_artifacts:
-          path: ~/junit
+#      - run:
+#          name: Save test results
+#          command: |
+#            mkdir -p ~/junit/
+#            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+#          when: always
+#
+#      - store_test_results:
+#          path: ~/junit
+#
+#      - store_artifacts:
+#          path: ~/junit
 
       - run:
           name: install yarn
@@ -67,5 +67,5 @@ jobs:
 
       - run:
           name: Build Docker Image
-          command: ./mvnw -Pprod
+          command: ./mvnw -Pprod clean test
 #          command: ./gradlew bootRepackage -Pprod pushDockerLatest pushDockerVersionTag -x test
