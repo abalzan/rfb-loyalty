@@ -19,6 +19,8 @@ logging:
         ROOT: #logback.loglevel#
         br.com.andrei: #logback.loglevel#
         io.github.jhipster: #logback.loglevel#
+        br.com.andrei.service: debug
+        br.com.andrei.aop.logging: error
 
 management:
     security:
