@@ -30,8 +30,8 @@ public class RfbLocationRepositoryTest extends AbstractRepositoryTest {
 	List<RfbLocation> tuesdayLocation = rfbLocationRepository.findAllByRunDayOfWeek(DayOfWeek.TUESDAY.getValue());
 	List<RfbLocation> WednesdayLocation = rfbLocationRepository.findAllByRunDayOfWeek(DayOfWeek.WEDNESDAY.getValue());
 	
-	assertEquals(2, mondayLocation.size());
-	assertEquals(2, tuesdayLocation.size());
+	assertEquals(1, mondayLocation.size());
+	assertEquals(1, tuesdayLocation.size());
 	assertEquals(1, WednesdayLocation.size());
 	}
 	
