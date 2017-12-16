@@ -1,3 +1,7 @@
+[![CircleCI](https://circleci.com/gh/abalzan/rfb-loyalty.svg?style=svg)](https://circleci.com/gh/abalzan/rfb-loyalty)
+
+[![codecov](https://codecov.io/gh/abalzan/rfb-loyalty/branch/master/graph/badge.svg)](https://codecov.io/gh/abalzan/rfb-loyalty)
+
 # rfbloyalty
 This application was generated using JHipster 4.11.1, you can find documentation and help at [http://www.jhipster.tech/documentation-archive/v4.11.1](http://www.jhipster.tech/documentation-archive/v4.11.1).
 
