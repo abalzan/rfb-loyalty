@@ -54,20 +54,23 @@ spring:
     thymeleaf:
         mode: XHTML
     social:
+        #social configurations are here just for learning purposes, if you want to integrate with social, you should configure it
+        #as an OS variable, or as an environment variable, these properties shouldn't be in this file as anyone can see it.
+        
         # see https://developers.google.com/+/web/signin/server-side-flow#step_1_create_a_client_id_and_client_secret
         google:
-            client-id: xxx
-            client-secret: xxx
+            client-id: id_here.apps.googleusercontent.com
+            client-secret: secret_here
 
         # see https://developers.facebook.com/docs/facebook-login/v2.2
         facebook:
-            app-id: 310970152754626
-            app-secret: 
+            app-id: id_here
+            app-secret: secret_here
 
         # see https://apps.twitter.com/app/
         twitter:
-            client-id: xxx
-            client-secret: xxx
+            app-id: id_here
+            app-secret: secret_here
 
         # jhipster-needle-add-social-configuration
 security:
