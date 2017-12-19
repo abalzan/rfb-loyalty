@@ -5,6 +5,7 @@ import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginService } from './login.service';
 import { StateStorageService } from '../auth/state-storage.service';
+import { error } from 'util';
 
 @Component({
     selector: 'jhi-login-modal',
@@ -16,14 +17,15 @@ export class JhiLoginModalComponent implements AfterViewInit {
     rememberMe: boolean;
     username: string;
     credentials: any;
+    authenticationErrorMessage: string;
 
     constructor(
         private eventManager: JhiEventManager,
         private loginService: LoginService,
         private stateStorageService: StateStorageService,
         private elementRef: ElementRef,
-        private renderer: Renderer,
         private router: Router,
+        private renderer: Renderer,
         public activeModal: NgbActiveModal
     ) {
         this.credentials = {};
@@ -68,8 +70,10 @@ export class JhiLoginModalComponent implements AfterViewInit {
                 this.stateStorageService.storeUrl(null);
                 this.router.navigate([redirect]);
             }
-        }).catch(() => {
+        }).catch((error) => {
+            const errorMessage = JSON.parse(error._body).message;
             this.authenticationError = true;
+            this.authenticationErrorMessage = errorMessage;
         });
     }
 
