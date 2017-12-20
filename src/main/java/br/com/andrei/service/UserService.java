@@ -1,16 +1,13 @@
 package br.com.andrei.service;
 
-import br.com.andrei.domain.Authority;
-import br.com.andrei.domain.User;
-import br.com.andrei.repository.AuthorityRepository;
-import br.com.andrei.repository.PersistentTokenRepository;
-import br.com.andrei.config.Constants;
-import br.com.andrei.repository.UserRepository;
-import br.com.andrei.security.AuthoritiesConstants;
-import br.com.andrei.security.SecurityUtils;
-import br.com.andrei.service.util.RandomUtil;
-import br.com.andrei.service.dto.UserDTO;
-import br.com.andrei.web.rest.vm.ManagedUserVM;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +19,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import br.com.andrei.config.Constants;
+import br.com.andrei.domain.Authority;
+import br.com.andrei.domain.User;
+import br.com.andrei.repository.AuthorityRepository;
+import br.com.andrei.repository.PersistentTokenRepository;
+import br.com.andrei.repository.UserRepository;
+import br.com.andrei.security.AuthoritiesConstants;
+import br.com.andrei.security.SecurityUtils;
+import br.com.andrei.service.dto.UserDTO;
+import br.com.andrei.service.util.RandomUtil;
 
 /**
  * Service class for managing users.
@@ -101,7 +103,7 @@ public class UserService {
     public User registerUser(UserDTO userDTO, String password) {
 
         User newUser = new User();
-        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
+        Authority authority = authorityRepository.findOne(AuthoritiesConstants.RUNNER);
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(userDTO.getLogin());

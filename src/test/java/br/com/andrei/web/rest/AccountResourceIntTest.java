@@ -1,22 +1,25 @@
 package br.com.andrei.web.rest;
 
-import br.com.andrei.config.Constants;
-import br.com.andrei.RfbloyaltyApp;
-import br.com.andrei.domain.Authority;
-import br.com.andrei.domain.PersistentToken;
-import br.com.andrei.domain.User;
-import br.com.andrei.repository.AuthorityRepository;
-import br.com.andrei.repository.PersistentTokenRepository;
-import br.com.andrei.repository.UserRepository;
-import br.com.andrei.security.AuthoritiesConstants;
-import br.com.andrei.service.MailService;
-import br.com.andrei.service.dto.UserDTO;
-import br.com.andrei.web.rest.errors.ExceptionTranslator;
-import br.com.andrei.web.rest.vm.KeyAndPasswordVM;
-import br.com.andrei.web.rest.vm.ManagedUserVM;
-import br.com.andrei.service.UserService;
-import org.apache.commons.lang3.RandomStringUtils;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,18 +35,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.Instant;
-import java.time.LocalDate;
 
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import br.com.andrei.RfbloyaltyApp;
+import br.com.andrei.config.Constants;
+import br.com.andrei.domain.Authority;
+import br.com.andrei.domain.PersistentToken;
+import br.com.andrei.domain.User;
+import br.com.andrei.repository.AuthorityRepository;
+import br.com.andrei.repository.PersistentTokenRepository;
+import br.com.andrei.repository.UserRepository;
+import br.com.andrei.security.AuthoritiesConstants;
+import br.com.andrei.service.MailService;
+import br.com.andrei.service.UserService;
+import br.com.andrei.service.dto.UserDTO;
+import br.com.andrei.web.rest.errors.ExceptionTranslator;
+import br.com.andrei.web.rest.vm.KeyAndPasswordVM;
+import br.com.andrei.web.rest.vm.ManagedUserVM;
 
 /**
  * Test class for the AccountResource REST controller.
@@ -174,7 +181,7 @@ public class AccountResourceIntTest {
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         restMvc.perform(
             post("/api/register")
@@ -198,7 +205,7 @@ public class AccountResourceIntTest {
         invalidUser.setActivated(true);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -222,7 +229,7 @@ public class AccountResourceIntTest {
         invalidUser.setActivated(true);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -246,7 +253,7 @@ public class AccountResourceIntTest {
         invalidUser.setActivated(true);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -270,7 +277,7 @@ public class AccountResourceIntTest {
         invalidUser.setActivated(true);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -295,7 +302,7 @@ public class AccountResourceIntTest {
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         // Duplicate login, different email
         ManagedUserVM duplicatedUser = new ManagedUserVM();
@@ -344,7 +351,7 @@ public class AccountResourceIntTest {
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         // Duplicate email, different login
         ManagedUserVM duplicatedUser = new ManagedUserVM();
@@ -415,7 +422,7 @@ public class AccountResourceIntTest {
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         restMvc.perform(
             post("/api/register")
@@ -426,7 +433,7 @@ public class AccountResourceIntTest {
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getAuthorities()).hasSize(1)
-            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
+            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.RUNNER));
     }
 
     @Test
