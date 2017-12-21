@@ -47,7 +47,8 @@ export class RfbEventDialogComponent implements OnInit {
         this.isSaving = true;
         if (this.rfbEvent.id !== undefined) {
             this.subscribeToSaveResponse(
-                this.rfbEventService.update(this.rfbEvent));
+                this.rfbEventService.update(this.rfbEvent)
+            );
         } else {
             this.subscribeToSaveResponse(
                 this.rfbEventService.create(this.rfbEvent));

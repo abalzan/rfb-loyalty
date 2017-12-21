@@ -1,10 +1,8 @@
 package br.com.andrei.service.dto;
 
 
-import java.time.LocalDate;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -12,13 +10,15 @@ import java.util.Objects;
  */
 public class RfbEventDTO implements Serializable {
 
-    private Long id;
+	private static final long serialVersionUID = -1823366930251244985L;
+
+	private Long id;
 
     private LocalDate eventDate;
 
     private String eventCode;
 
-    private Long rfbLocationId;
+    private RfbLocationDTO rfbLocationDTO;
 
     public Long getId() {
         return id;
@@ -43,16 +43,16 @@ public class RfbEventDTO implements Serializable {
     public void setEventCode(String eventCode) {
         this.eventCode = eventCode;
     }
+    
+    public RfbLocationDTO getRfbLocationDTO() {
+		return rfbLocationDTO;
+	}
 
-    public Long getRfbLocationId() {
-        return rfbLocationId;
-    }
+	public void setRfbLocationDTO(RfbLocationDTO rfbLocationDTO) {
+		this.rfbLocationDTO = rfbLocationDTO;
+	}
 
-    public void setRfbLocationId(Long rfbLocationId) {
-        this.rfbLocationId = rfbLocationId;
-    }
-
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
