@@ -34,8 +34,8 @@
                     </div>
                 </td>
                 <td>
-                    <div *ngIf="rfbEventAttendance.rfbUserDTO.id">
-                        <a [routerLink]="['../rfb-user', rfbEventAttendance.rfbUserId  ]" >
+                    <div *ngIf="rfbEventAttendance.rfbUserDTO">
+                        <a [routerLink]="['../rfb-user', rfbEventAttendance.rfbUserDTO.id  ]" >
                             {{rfbEventAttendance.rfbUserDTO.username}}
                         </a>
                     </div>

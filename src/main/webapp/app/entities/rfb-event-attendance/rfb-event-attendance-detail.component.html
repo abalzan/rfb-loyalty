@@ -11,7 +11,7 @@
         <dt><span>Event</span></dt>
         <dd>
             <div *ngIf="rfbEventAttendance.rfbEventDTO.id">
-                <a [routerLink]="['/rfb-event', rfbEventAttendance.rfbEventId]">
+                <a [routerLink]="['/rfb-event', rfbEventAttendance.rfbEventDTO.rfbLocationDTO.id]">
                     {{rfbEventAttendance.rfbEventDTO.rfbLocationDTO.locationName}}
                 </a>
             </div>
@@ -19,7 +19,7 @@
         <dt><span>Runner</span></dt>
         <dd>
             <div *ngIf="rfbEventAttendance.rfbUserDTO.id">
-                <a [routerLink]="['/rfb-user', rfbEventAttendance.rfbUserId]">
+                <a [routerLink]="['/rfb-user', rfbEventAttendance.rfbUserDTO.id]">
                     {{rfbEventAttendance.rfbUserDTO.username}}
                 </a>
             </div>
