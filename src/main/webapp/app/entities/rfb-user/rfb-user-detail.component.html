@@ -10,8 +10,8 @@
         </dd>
         <dt><span>Home Location</span></dt>
         <dd>
-            <div *ngIf="rfbUser.homeLocationId">
-                <a [routerLink]="['/rfb-location', rfbUser.homeLocationId]">{{rfbUser.homeLocationId}}</a>
+            <div *ngIf="rfbUser.rfbLocationDTO.id">
+                <a [routerLink]="['/rfb-location', rfbUser.rfbLocationDTO.id]">{{rfbUser.rfbLocationDTO.locationName}}</a>
             </div>
         </dd>
     </dl>

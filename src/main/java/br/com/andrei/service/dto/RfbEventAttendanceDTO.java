@@ -1,14 +1,8 @@
 package br.com.andrei.service.dto;
 
 
-import java.time.LocalDate;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
-import br.com.andrei.domain.RfbEvent;
-import br.com.andrei.domain.RfbUser;
-
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -16,13 +10,15 @@ import java.util.Objects;
  */
 public class RfbEventAttendanceDTO implements Serializable {
 
-    private Long id;
+	private static final long serialVersionUID = -1052859082884161029L;
+
+	private Long id;
 
     private LocalDate attendanceDate;
 
     private RfbEventDTO rfbEventDTO;
 
-    private RfbUserDTO rfbUserDTO;
+    private UserDTO userDTO;
 
     public Long getId() {
         return id;
@@ -48,12 +44,12 @@ public class RfbEventAttendanceDTO implements Serializable {
 		this.rfbEventDTO = rfbEventDTO;
 	}
 
-	public RfbUserDTO getRfbUserDTO() {
-		return rfbUserDTO;
+	public UserDTO getUserDTO() {
+		return userDTO;
 	}
 
-	public void setRfbUserDTO(RfbUserDTO rfbUserDTO) {
-		this.rfbUserDTO = rfbUserDTO;
+	public void setUserDTO(UserDTO userDTO) {
+		this.userDTO = userDTO;
 	}
 
 	@Override

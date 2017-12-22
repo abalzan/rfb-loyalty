@@ -2,8 +2,6 @@ package br.com.andrei.service.dto;
 
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -11,7 +9,9 @@ import java.util.Objects;
  */
 public class RfbLocationDTO implements Serializable {
 
-    private Long id;
+	private static final long serialVersionUID = 8310072480526963785L;
+
+	private Long id;
 
     private String locationName;
 

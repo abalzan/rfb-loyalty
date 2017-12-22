@@ -98,6 +98,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "rfb_location_id")
+    private RfbLocation homeLocation;
+    
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<RfbEventAttendance> rfbEventAttendances = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -212,7 +221,23 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.persistentTokens = persistentTokens;
     }
 
-    @Override
+    public RfbLocation getHomeLocation() {
+		return homeLocation;
+	}
+
+	public void setHomeLocation(RfbLocation homeLocation) {
+		this.homeLocation = homeLocation;
+	}
+
+	public Set<RfbEventAttendance> getRfbEventAttendances() {
+		return rfbEventAttendances;
+	}
+
+	public void setRfbEventAttendances(Set<RfbEventAttendance> rfbEventAttendances) {
+		this.rfbEventAttendances = rfbEventAttendances;
+	}
+	
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -241,6 +266,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", activated='" + activated + '\'' +
             ", langKey='" + langKey + '\'' +
             ", activationKey='" + activationKey + '\'' +
+            ", homeLocation='" + homeLocation.getLocationName() + '\'' +
+            ", rfbEventAttendances='" + rfbEventAttendances + '\'' +
             "}";
     }
 }
