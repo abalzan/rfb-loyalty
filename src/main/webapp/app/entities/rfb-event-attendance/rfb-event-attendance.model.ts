@@ -7,7 +7,7 @@ export class RfbEventAttendance implements BaseEntity {
         public id?: number,
         public attendanceDate?: any,
         public rfbEventDTO?: RfbEvent,
-        public userDTO?: User
+        public rfbUserDTO?: User
     ) {
     }
 }
