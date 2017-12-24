@@ -1,9 +1,14 @@
 package br.com.andrei.web.rest;
 
 import br.com.andrei.RfbloyaltyApp;
-
+import br.com.andrei.domain.RfbEvent;
 import br.com.andrei.domain.RfbEventAttendance;
+import br.com.andrei.domain.RfbLocation;
+import br.com.andrei.domain.User;
 import br.com.andrei.repository.RfbEventAttendanceRepository;
+import br.com.andrei.repository.RfbEventRepository;
+import br.com.andrei.repository.RfbLocationRepository;
+import br.com.andrei.repository.UserRepository;
 import br.com.andrei.service.RfbEventAttendanceService;
 import br.com.andrei.service.dto.RfbEventAttendanceDTO;
 import br.com.andrei.service.mapper.RfbEventAttendanceMapper;
@@ -18,15 +23,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 import static br.com.andrei.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,6 +75,19 @@ public class RfbEventAttendanceResourceIntTest {
 
     @Autowired
     private EntityManager em;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private RfbEventRepository rfbEventRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private RfbLocationRepository rfbLocationRepository;
+    
 
     private MockMvc restRfbEventAttendanceMockMvc;
 
@@ -91,6 +113,7 @@ public class RfbEventAttendanceResourceIntTest {
     public static RfbEventAttendance createEntity(EntityManager em) {
         RfbEventAttendance rfbEventAttendance = new RfbEventAttendance()
             .attendanceDate(DEFAULT_ATTENDANCE_DATE);
+            
         return rfbEventAttendance;
     }
 
@@ -102,8 +125,11 @@ public class RfbEventAttendanceResourceIntTest {
     @Test
     @Transactional
     public void createRfbEventAttendance() throws Exception {
-        int databaseSizeBeforeCreate = rfbEventAttendanceRepository.findAll().size();
+    	int databaseSizeBeforeCreate = rfbEventAttendanceRepository.findAll().size();
 
+        rfbEventAttendance.user(createUser());
+        rfbEventAttendance.rfbEvent(createRfbEvent());
+        
         // Create the RfbEventAttendance
         RfbEventAttendanceDTO rfbEventAttendanceDTO = rfbEventAttendanceMapper.toDto(rfbEventAttendance);
         restRfbEventAttendanceMockMvc.perform(post("/api/rfb-event-attendances")
@@ -116,6 +142,7 @@ public class RfbEventAttendanceResourceIntTest {
         assertThat(rfbEventAttendanceList).hasSize(databaseSizeBeforeCreate + 1);
         RfbEventAttendance testRfbEventAttendance = rfbEventAttendanceList.get(rfbEventAttendanceList.size() - 1);
         assertThat(testRfbEventAttendance.getAttendanceDate()).isEqualTo(DEFAULT_ATTENDANCE_DATE);
+        
     }
 
     @Test
@@ -123,8 +150,12 @@ public class RfbEventAttendanceResourceIntTest {
     public void createRfbEventAttendanceWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = rfbEventAttendanceRepository.findAll().size();
 
+        rfbEventAttendance.user(createUser());
+        rfbEventAttendance.rfbEvent(createRfbEvent());
+        
         // Create the RfbEventAttendance with an existing ID
         rfbEventAttendance.setId(1L);
+        
         RfbEventAttendanceDTO rfbEventAttendanceDTO = rfbEventAttendanceMapper.toDto(rfbEventAttendance);
 
         // An entity with an existing ID cannot be created, so this API call must fail
@@ -141,7 +172,11 @@ public class RfbEventAttendanceResourceIntTest {
     @Test
     @Transactional
     public void getAllRfbEventAttendances() throws Exception {
-        // Initialize the database
+
+    	rfbEventAttendance.user(createUser());
+        rfbEventAttendance.rfbEvent(createRfbEvent());
+        
+    	// Initialize the database
         rfbEventAttendanceRepository.saveAndFlush(rfbEventAttendance);
 
         // Get all the rfbEventAttendanceList
@@ -155,7 +190,11 @@ public class RfbEventAttendanceResourceIntTest {
     @Test
     @Transactional
     public void getRfbEventAttendance() throws Exception {
-        // Initialize the database
+        
+    	rfbEventAttendance.user(createUser());
+        rfbEventAttendance.rfbEvent(createRfbEvent());
+        
+    	// Initialize the database
         rfbEventAttendanceRepository.saveAndFlush(rfbEventAttendance);
 
         // Get the rfbEventAttendance
@@ -177,7 +216,11 @@ public class RfbEventAttendanceResourceIntTest {
     @Test
     @Transactional
     public void updateRfbEventAttendance() throws Exception {
-        // Initialize the database
+
+    	rfbEventAttendance.user(createUser());
+        rfbEventAttendance.rfbEvent(createRfbEvent());
+        
+    	// Initialize the database
         rfbEventAttendanceRepository.saveAndFlush(rfbEventAttendance);
         int databaseSizeBeforeUpdate = rfbEventAttendanceRepository.findAll().size();
 
@@ -205,7 +248,10 @@ public class RfbEventAttendanceResourceIntTest {
     @Transactional
     public void updateNonExistingRfbEventAttendance() throws Exception {
         int databaseSizeBeforeUpdate = rfbEventAttendanceRepository.findAll().size();
-
+        
+    	rfbEventAttendance.user(createUser());
+        rfbEventAttendance.rfbEvent(createRfbEvent());
+        
         // Create the RfbEventAttendance
         RfbEventAttendanceDTO rfbEventAttendanceDTO = rfbEventAttendanceMapper.toDto(rfbEventAttendance);
 
@@ -274,4 +320,46 @@ public class RfbEventAttendanceResourceIntTest {
         assertThat(rfbEventAttendanceMapper.fromId(42L).getId()).isEqualTo(42);
         assertThat(rfbEventAttendanceMapper.fromId(null)).isNull();
     }
+    
+    
+    private User createUser() {
+    	User user = new User();
+		user.setFirstName("test");
+		user.setPassword(passwordEncoder.encode("test"));
+		user.setActivated(true);
+		user.setLogin("junit_test");
+		userRepository.save(user);
+		return user;
+    }
+    
+    private void deleteUser() {
+    	Optional<User> findOneByLogin = userRepository.findOneByLogin("junit_test");
+    	userRepository.delete(findOneByLogin.get().getId());
+    }
+    
+    private RfbEvent createRfbEvent() {
+    	
+    	RfbEvent event = new RfbEvent();
+		event.setEventCode("event code");
+		event.setEventDate(LocalDate.now(ZoneId.systemDefault()));
+		event.setRfbLocation(createRfbLocation());
+		rfbEventRepository.save(event);
+		
+		return event;
+    }
+    
+//    private void deleteEvent() {
+//    	rfbEventRepository.;
+//    }
+    
+    private RfbLocation createRfbLocation() {
+		RfbLocation rfbLocation = new RfbLocation();
+		rfbLocation.setLocationName("test location name");
+		rfbLocation.setRunDayOfWeek(DayOfWeek.THURSDAY.getValue());
+		rfbLocationRepository.save(rfbLocation);
+		
+		return rfbLocation;
+		
+    }
+    
 }
