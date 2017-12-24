@@ -42,9 +42,10 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
+    #Here I am using maildev to test the email for more details about it please see: https://github.com/djfarrelly/MailDev
     mail:
         host: localhost
-        port: 25
+        port: 1025 
         username:
         password:
     messages:
