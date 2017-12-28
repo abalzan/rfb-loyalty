@@ -21,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andrei.config.Constants;
 import br.com.andrei.domain.Authority;
+import br.com.andrei.domain.RfbLocation;
 import br.com.andrei.domain.User;
 import br.com.andrei.repository.AuthorityRepository;
 import br.com.andrei.repository.PersistentTokenRepository;
+import br.com.andrei.repository.RfbLocationRepository;
 import br.com.andrei.repository.UserRepository;
 import br.com.andrei.security.AuthoritiesConstants;
 import br.com.andrei.security.SecurityUtils;
@@ -50,16 +52,19 @@ public class UserService {
     private final PersistentTokenRepository persistentTokenRepository;
 
     private final AuthorityRepository authorityRepository;
+    
+    private final RfbLocationRepository rfbLocationRepository;
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, CacheManager cacheManager, RfbLocationRepository rfbLocationRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.socialService = socialService;
         this.persistentTokenRepository = persistentTokenRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.rfbLocationRepository = rfbLocationRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -106,6 +111,7 @@ public class UserService {
         Authority authority = authorityRepository.findOne(AuthoritiesConstants.RUNNER);
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
+        RfbLocation rfbLocation = rfbLocationRepository.findOne(userDTO.getHomeLocation());
         newUser.setLogin(userDTO.getLogin());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
@@ -120,6 +126,7 @@ public class UserService {
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
         newUser.setAuthorities(authorities);
+        newUser.setHomeLocation(rfbLocation);
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -142,6 +149,10 @@ public class UserService {
                 .map(authorityRepository::findOne)
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
+        }
+        if (userDTO.getHomeLocation() != null) {
+            RfbLocation rfbLocation = rfbLocationRepository.findOne(userDTO.getHomeLocation());
+            user.setHomeLocation(rfbLocation);
         }
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPassword(encryptedPassword);
@@ -198,7 +209,8 @@ public class UserService {
                 userDTO.getAuthorities().stream()
                     .map(authorityRepository::findOne)
                     .forEach(managedAuthorities::add);
-                cacheManager.getCache(USERS_CACHE).evict(user.getLogin());
+                cacheManager.getCache(USERS_CACHE).evict(user.getLogin());                
+                user.setHomeLocation(rfbLocationRepository.findOne(userDTO.getHomeLocation()));
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })

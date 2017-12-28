@@ -29,7 +29,7 @@
                 <td>{{rfbEvent.eventDate | date:'mediumDate'}}</td>
                 <td>{{rfbEvent.eventCode}}</td>
                 <td>
-                    <div *ngIf="rfbEvent.rfbLocationDTO.id">
+                    <div *ngIf="rfbEvent.rfbLocationDTO">
                         <a [routerLink]="['../rfb-location', rfbEvent.rfbLocationDTO.id  ]" >{{rfbEvent.rfbLocationDTO.locationName}}</a>
                     </div>
                 </td>

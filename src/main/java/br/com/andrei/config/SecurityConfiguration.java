@@ -138,10 +138,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
+            .antMatchers(HttpMethod.GET,"/api/account").permitAll()
             .antMatchers("/api/profile-info").permitAll()
             .antMatchers("/api/rfb-events/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.ORGANIZER)
+            .antMatchers(HttpMethod.GET, "/api/rfb-locations/**").permitAll()
             .antMatchers("/api/rfb-location/**").hasAuthority(AuthoritiesConstants.ADMIN)
+//            .antMatchers(HttpMethod.POST,"/api/rfb-event-attendance").hasAuthority(AuthoritiesConstants.RUNNER)    
             .antMatchers("/api/rfb-event-attendance/**").hasAuthority(AuthoritiesConstants.ADMIN)
+//            .antMatchers(HttpMethod.POST,"/api/rfb-users/**").permitAll()
             .antMatchers("/api/rfb-user/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
@@ -149,7 +153,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/v2/api-docs/**").permitAll()
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN);
-
+        
     }
 
     @Bean

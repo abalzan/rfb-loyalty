@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewInit, Renderer, ElementRef } from '@angular
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { Register } from './register.service';
-import { LoginModalService, EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '../../shared';
+import { LoginModalService, EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE, ResponseWrapper } from '../../shared';
+import { RfbLocation, RfbLocationService} from '../../entities/rfb-location';
 
 @Component({
     selector: 'jhi-register',
@@ -18,18 +19,24 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     registerAccount: any;
     success: boolean;
     modalRef: NgbModalRef;
+    locations: RfbLocation[];
 
     constructor(
         private loginModalService: LoginModalService,
         private registerService: Register,
         private elementRef: ElementRef,
-        private renderer: Renderer
+        private renderer: Renderer,
+        private locationService: RfbLocationService
     ) {
     }
 
     ngOnInit() {
         this.success = false;
-        this.registerAccount = {};
+        this.registerAccount = {
+            homeLocation: null,
+        };
+
+        this.loadLocations();
     }
 
     ngAfterViewInit() {
@@ -64,5 +71,18 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         } else {
             this.error = 'ERROR';
         }
+    }
+
+    private loadLocations() {
+        this.locations = [];
+        this.locationService.query({
+            page: 0,
+            size: 100,
+            sort: ['locationName,runDayOfWeek', 'ASC']}).subscribe(
+            (res: ResponseWrapper) => {
+                this.locations = res.json;
+            },
+            (res: ResponseWrapper) => { console.log(res) }
+        );
     }
 }

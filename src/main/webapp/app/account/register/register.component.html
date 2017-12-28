@@ -49,6 +49,18 @@
                         </small>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="homeLocation">Home Location</label>
+                    <select class="form-control" name="homeLocation" id="homeLocation" #homeLocation="ngModel"  
+                            [(ngModel)]="registerAccount.homeLocation" required>
+                         <option [value]="null" [selected]="">Select Home Location</option>
+                         <option *ngFor = 'let location of locations'  [value]="location.id">{{location.locationName}}</option>
+                    </select>
+
+
+
+
                 <div class="form-group">
                     <label class="form-control-label" for="email">Email</label>
                     <input type="email" class="form-control" id="email" name="email" #email="ngModel" placeholder="Your email"
