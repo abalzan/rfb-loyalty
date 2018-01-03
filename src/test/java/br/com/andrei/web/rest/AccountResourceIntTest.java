@@ -181,6 +181,7 @@ public class AccountResourceIntTest {
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
+        validUser.setHomeLocation(1L);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
         restMvc.perform(
@@ -301,6 +302,7 @@ public class AccountResourceIntTest {
         validUser.setEmail("alice@example.com");
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
+        validUser.setHomeLocation(1L);
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
@@ -318,6 +320,7 @@ public class AccountResourceIntTest {
         duplicatedUser.setCreatedDate(validUser.getCreatedDate());
         duplicatedUser.setLastModifiedBy(validUser.getLastModifiedBy());
         duplicatedUser.setLastModifiedDate(validUser.getLastModifiedDate());
+        duplicatedUser.setHomeLocation(validUser.getHomeLocation());
         duplicatedUser.setAuthorities(new HashSet<>(validUser.getAuthorities()));
 
         // Good user
@@ -350,6 +353,7 @@ public class AccountResourceIntTest {
         validUser.setEmail("john@example.com");
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
+        validUser.setHomeLocation(1L);
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 
@@ -367,6 +371,7 @@ public class AccountResourceIntTest {
         duplicatedUser.setCreatedDate(validUser.getCreatedDate());
         duplicatedUser.setLastModifiedBy(validUser.getLastModifiedBy());
         duplicatedUser.setLastModifiedDate(validUser.getLastModifiedDate());
+        duplicatedUser.setHomeLocation(validUser.getHomeLocation());
         duplicatedUser.setAuthorities(new HashSet<>(validUser.getAuthorities()));
 
         // Good user
@@ -421,6 +426,7 @@ public class AccountResourceIntTest {
         validUser.setEmail("badguy@example.com");
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
+        validUser.setHomeLocation(1L);
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.RUNNER));
 

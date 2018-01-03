@@ -34,6 +34,14 @@ public interface RfbEventService {
     RfbEventDTO findOne(Long id);
 
     /**
+     * Get the "id" rfbEvent.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    RfbEventDTO findByTodayAndLocation(Long locationID);
+    
+    /**
      * Delete the "id" rfbEvent.
      *
      * @param id the id of the entity

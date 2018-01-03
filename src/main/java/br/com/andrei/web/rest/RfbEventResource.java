@@ -109,6 +109,20 @@ public class RfbEventResource {
         RfbEventDTO rfbEventDTO = rfbEventService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(rfbEventDTO));
     }
+    
+    /**
+     * GET  /rfb-events/location/{locationId} get a single Event for location and today event .
+     *
+     * @param locationID the id of the rfbEventDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the rfbEventDTO, or with status 404 (Not Found)
+     */
+    @GetMapping("/rfb-events/location/{locationID}")
+    @Timed
+    public ResponseEntity<RfbEventDTO> getTodayEventByLocation(@PathVariable Long locationID) {
+        log.debug("REST request to get a single event by location and today's date : {}", locationID);
+        RfbEventDTO rfbEventDTO = rfbEventService.findByTodayAndLocation(locationID);
+        return new ResponseEntity<RfbEventDTO>(rfbEventDTO, null, HttpStatus.OK);
+    }
 
     /**
      * DELETE  /rfb-events/:id : delete the "id" rfbEvent.

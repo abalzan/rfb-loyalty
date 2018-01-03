@@ -14,6 +14,7 @@ import br.com.andrei.domain.RfbEvent;
 import br.com.andrei.domain.RfbEventAttendance;
 import br.com.andrei.domain.RfbLocation;
 import br.com.andrei.domain.User;
+import br.com.andrei.repository.AuthorityRepository;
 import br.com.andrei.repository.RfbEventAttendanceRepository;
 import br.com.andrei.repository.RfbEventRepository;
 import br.com.andrei.repository.RfbLocationRepository;
@@ -27,16 +28,20 @@ public class Bootstrap implements CommandLineRunner {
 	private final RfbEventAttendanceRepository rfbEventAttendanceRepository;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final AuthorityRepository authorityRepository;
 
-	public Bootstrap(RfbLocationRepository rfbLocationRepository, RfbEventRepository rfbEventRepository,
-	                 RfbEventAttendanceRepository rfbEventAttendanceRepository, UserRepository userRepository,
-	                 PasswordEncoder passwordEncoder) {
-	        this.rfbLocationRepository = rfbLocationRepository;
-	        this.rfbEventRepository = rfbEventRepository;
-	        this.rfbEventAttendanceRepository = rfbEventAttendanceRepository;
-	        this.userRepository = userRepository;
-	        this.passwordEncoder = passwordEncoder;
-	    }
+	
+	
+public Bootstrap(RfbLocationRepository rfbLocationRepository, RfbEventRepository rfbEventRepository,
+			RfbEventAttendanceRepository rfbEventAttendanceRepository, UserRepository userRepository,
+			PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
+		this.rfbLocationRepository = rfbLocationRepository;
+		this.rfbEventRepository = rfbEventRepository;
+		this.rfbEventAttendanceRepository = rfbEventAttendanceRepository;
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.authorityRepository = authorityRepository;
+	}
 
 	@Transactional
 	@Override
@@ -55,6 +60,8 @@ public class Bootstrap implements CommandLineRunner {
 		user.setPassword(passwordEncoder.encode("admin"));
 		user.setActivated(true);
 		user.setLogin("johnny");
+		user.addAuthority(authorityRepository.findOne("ROLE_RUNNER"));
+        user.addAuthority(authorityRepository.findOne("ROLE_ORGANIZER"));
 		userRepository.save(user);
 		
 

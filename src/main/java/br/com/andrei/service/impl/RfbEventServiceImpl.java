@@ -2,9 +2,14 @@ package br.com.andrei.service.impl;
 
 import br.com.andrei.service.RfbEventService;
 import br.com.andrei.domain.RfbEvent;
+import br.com.andrei.domain.RfbLocation;
 import br.com.andrei.repository.RfbEventRepository;
+import br.com.andrei.repository.RfbLocationRepository;
 import br.com.andrei.service.dto.RfbEventDTO;
 import br.com.andrei.service.mapper.RfbEventMapper;
+
+import java.time.LocalDate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,15 +28,18 @@ public class RfbEventServiceImpl implements RfbEventService{
     private final Logger log = LoggerFactory.getLogger(RfbEventServiceImpl.class);
 
     private final RfbEventRepository rfbEventRepository;
+    private final RfbLocationRepository locationRepository;
 
     private final RfbEventMapper rfbEventMapper;
 
-    public RfbEventServiceImpl(RfbEventRepository rfbEventRepository, RfbEventMapper rfbEventMapper) {
-        this.rfbEventRepository = rfbEventRepository;
-        this.rfbEventMapper = rfbEventMapper;
-    }
+    public RfbEventServiceImpl(RfbEventRepository rfbEventRepository, RfbLocationRepository locationRepository,
+			RfbEventMapper rfbEventMapper) {
+		this.rfbEventRepository = rfbEventRepository;
+		this.locationRepository = locationRepository;
+		this.rfbEventMapper = rfbEventMapper;
+	}
 
-    /**
+	/**
      * Save a rfbEvent.
      *
      * @param rfbEventDTO the entity to save
@@ -70,6 +78,20 @@ public class RfbEventServiceImpl implements RfbEventService{
     public RfbEventDTO findOne(Long id) {
         log.debug("Request to get RfbEvent : {}", id);
         RfbEvent rfbEvent = rfbEventRepository.findOne(id);
+        return rfbEventMapper.toDto(rfbEvent);
+    }
+    
+    /**
+     * Get one rfbEvent by id.
+     *
+     * @param locationID the id of the entity
+     * @return the entity
+     */
+   
+    @Override
+    public RfbEventDTO findByTodayAndLocation(Long locationID) {
+        RfbLocation location = locationRepository.findOne(locationID);
+        RfbEvent rfbEvent = rfbEventRepository.findByEventDateEqualsAndRfbLocationEquals(LocalDate.now(),location);
         return rfbEventMapper.toDto(rfbEvent);
     }
 
