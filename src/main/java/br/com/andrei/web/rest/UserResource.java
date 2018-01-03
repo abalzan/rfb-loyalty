@@ -10,6 +10,7 @@ import br.com.andrei.service.UserService;
 import br.com.andrei.service.dto.UserDTO;
 import br.com.andrei.web.rest.errors.BadRequestAlertException;
 import br.com.andrei.web.rest.errors.EmailAlreadyUsedException;
+import br.com.andrei.web.rest.errors.HomeLocationNotFoundException;
 import br.com.andrei.web.rest.errors.LoginAlreadyUsedException;
 import br.com.andrei.web.rest.util.HeaderUtil;
 import br.com.andrei.web.rest.util.PaginationUtil;
@@ -128,8 +129,12 @@ public class UserResource {
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
-        //Workaround for homeLocation don't be null
-        userDTO.setHomeLocation(existingUser.get().getHomeLocation().getId());
+        if(userDTO.getHomeLocation() == null && existingUser.get().getHomeLocation().getId() == null) {
+        	throw new HomeLocationNotFoundException();
+        }
+        if(userDTO.getHomeLocation() == null) {
+        	userDTO.setHomeLocation(existingUser.get().getHomeLocation().getId());
+        }
         Optional<UserDTO> updatedUser = userService.updateUser(userDTO);
 
         return ResponseUtil.wrapOrNotFound(updatedUser,
