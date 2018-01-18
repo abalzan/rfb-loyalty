@@ -2,6 +2,9 @@
 
 [![codecov](https://codecov.io/gh/abalzan/rfb-loyalty/branch/master/graph/badge.svg)](https://codecov.io/gh/abalzan/rfb-loyalty)
 
+This project was generated using jhipster, and some customization were made. As a lesson learned, Jhipster is a pretty good to create a basic project, we configure and create a lot of interesting and useful stuff, like security, interface and so on, to add new functionalities and to do the maintenance is not that hard. For professional use, maybe it is necessary to separate front-end and backend into different projects, follow the steps in this link. http://www.jhipster.tech/separating-front-end-and-api/
+
+
 # rfbloyalty
 This application was generated using JHipster 4.11.1, you can find documentation and help at [http://www.jhipster.tech/documentation-archive/v4.11.1](http://www.jhipster.tech/documentation-archive/v4.11.1).
 
